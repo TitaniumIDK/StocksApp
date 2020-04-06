@@ -7,15 +7,24 @@
 //
 
 import UIKit
+import RxSwift
 
 class ViewController: UIViewController {
 
     @IBOutlet weak var label: UILabel!
+    
+    private let disposeBag = DisposeBag()
+    
+    let viewModel = CurrencyViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        let disposable = viewModel.currencyObservable
+            .subscribe(onNext: { valute in
+                self.label.text = String(format: "%f", valute.Value)
+            })
+        disposable.disposed(by: disposeBag)
+        viewModel.loadData()
     }
-
-
 }
 
